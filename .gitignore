@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# app output directories
+app/outputs_decrypted/
+app/outputs_encrypted/
+app/uploads_encrypted/
+app/uploads_unencrypted/
