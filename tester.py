@@ -45,14 +45,43 @@ def encrypt_file(input_file):
     sha3_256 = j['sha3-256']
 
     # download the file
-    file_target, filename = download_file(dl_url)
+    full_path_for_file, filename = download_file(dl_url)
 
     # make sure the hashes match
-    validate_hashes(file_target, sha2_256, sha3_256)
-
+    validate_hashes(full_path_for_file, sha2_256, sha3_256)
 
     print('Filename: ' + filename)
     print('Password: ' + password)
+    
+    return full_path_for_file, password
+
+
+def decrypt_file(input_file, password):
+    print(input_file)
+    url = target + '/decrypt'
+    payload = {'password': password}
+    files = {'data': open(input_file, 'rb')}
+    r = s.post(url, files=files, data=payload)
+
+    # make sure we have a valid response code
+    validate_response(r)
+
+    # get JSON from response
+    j = r.json()
+
+    # pull out what we need from the JSON
+    dl_url = target + j['download url']
+    sha2_256 = j['sha2-256']
+    sha3_256 = j['sha3-256']
+
+    # download the file
+    full_path_for_file, filename = download_file(dl_url)
+
+    # make sure the hashes match
+    validate_hashes(full_path_for_file, sha2_256, sha3_256)
+
+    print('Filename: ' + filename)
+
 
 
 
@@ -119,7 +148,8 @@ def runner(input_file):
         print('Cannot find file: ' + str(input_file))
         exit()
     
-    encrypt_file(input_file)
+    encrypted_file, password = encrypt_file(input_file)
+    decrypt_file(encrypted_file, password)
 
 
 
