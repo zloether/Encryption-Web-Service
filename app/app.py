@@ -55,7 +55,6 @@ def path_encrypt():
     #   Encryption algorithm: AES-256-CBC
     
     # get form data
-    print(request.form.get('algorithm'))
     if request.form.get('algorithm'):
         print(request.form.get('algorithm'))
 
