@@ -105,7 +105,7 @@ def path_decrypt():
         error_message = {'error': 'missing password parameter'}
         error_code = 400
         return error_message, error_code
-    print(password)
+    
     # write file to disk
     stored_file = store_file(request.files, encrypted_uploads_folder)
     if stored_file[0] == False:
@@ -113,10 +113,12 @@ def path_decrypt():
         error_code = stored_file[2]
         return error_message, error_code
     
-    output_file = crypto.decrypt_aes_cbc(stored_file, decrypted_output_folder, password)
+    decrypted_file = crypto.decrypt_aes_cbc(stored_file, decrypted_output_folder, password)
 
     output = {
-        'download url': url_for('path_decrypt_download', id=output_file)
+        'download url': url_for('path_decrypt_download', id=decrypted_file),
+        'sha2-256': crypto.sha2_256(os.path.join(decrypted_output_folder, decrypted_file)),
+        'sha3-256': crypto.sha3_256(os.path.join(decrypted_output_folder, decrypted_file))
     }
 
     return output
